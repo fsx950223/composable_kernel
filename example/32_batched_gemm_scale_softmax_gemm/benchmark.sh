@@ -1,0 +1,2 @@
+python3 benchmark.py --name=padded_batched_gemm_scale_softmax_gemm_xdl_fp16 > padded_batched_gemm_scale_softmax_gemm_xdl_fp16.txt \
+# && python3 benchmark.py --name=batched_gemm_scale_softmax_gemm_permute_xdl_fp16 > batched_gemm_scale_softmax_gemm_permute_xdl_fp16.txt

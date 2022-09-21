@@ -169,7 +169,7 @@ int main(int argc, char* argv[])
         init_method     = std::stoi(argv[2]);
         time_kernel     = std::stoi(argv[3]);
     }
-    else if(argc == 9)
+    else if(argc == 10)
     {
         do_verification = std::stoi(argv[1]);
         init_method     = std::stoi(argv[2]);
@@ -181,6 +181,7 @@ int main(int argc, char* argv[])
         O = std::stoi(argv[7]);
 
         BatchCount = std::stoi(argv[8]);
+        alpha = std::stof(argv[9]);
     }
     else if(argc == 18)
     {
