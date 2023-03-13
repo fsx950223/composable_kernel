@@ -64,14 +64,8 @@ __global__ void
     while(
         (!(block_id >= arg_ptr[group_id].block_start_ && block_id < arg_ptr[group_id].block_end_)))
     {
-        if(block_id < arg_ptr[group_id].block_start_)
-        {
-            right = group_id;
-        }
-        else
-        {
-            left = group_id;
-        }
+        right = block_id < arg_ptr[group_id].block_start_ ? group_id : right;
+        left = block_id < arg_ptr[group_id].block_start_ ? left : group_id;
         group_id = index_t((left + right) / 2);
     }
 
@@ -84,8 +78,8 @@ __global__ void
         static_cast<long_index_t>(arg_ptr[group_id].compute_base_ptr_of_batch_.GetABasePtr(g_idx)));
     const long_index_t b_batch_offset = __builtin_amdgcn_readfirstlane(
         static_cast<long_index_t>(arg_ptr[group_id].compute_base_ptr_of_batch_.GetBBasePtr(g_idx)));
-    const long_index_t z_batch_offset = __builtin_amdgcn_readfirstlane(
-        static_cast<long_index_t>(arg_ptr[group_id].compute_base_ptr_of_batch_.GetZBasePtr(g_idx)));
+    // const long_index_t z_batch_offset = __builtin_amdgcn_readfirstlane(
+    //     static_cast<long_index_t>(arg_ptr[group_id].compute_base_ptr_of_batch_.GetZBasePtr(g_idx)));
     const long_index_t b1_batch_offset = __builtin_amdgcn_readfirstlane(static_cast<long_index_t>(
         arg_ptr[group_id].compute_base_ptr_of_batch_.GetB1BasePtr(g_idx)));
     const long_index_t c_batch_offset  = __builtin_amdgcn_readfirstlane(
@@ -95,14 +89,14 @@ __global__ void
 
     const index_t global_thread_id = get_thread_global_1d_id();
     ck::philox ph(seed, global_thread_id, offset);
-    unsigned short* z_matrix_ptr =
-        (arg_ptr[group_id].p_z_grid_ == nullptr ? nullptr
-                                                : arg_ptr[group_id].p_z_grid_ + z_batch_offset);
+    // unsigned short* z_matrix_ptr =
+    //     (arg_ptr[group_id].p_z_grid_ == nullptr ? nullptr
+    //                                             : arg_ptr[group_id].p_z_grid_ + z_batch_offset);
 
     GridwiseGemm::template Run<HasMainKBlockLoop>(
         arg_ptr[group_id].p_a_grid_ + a_batch_offset,
         arg_ptr[group_id].p_b_grid_ + b_batch_offset,
-        z_matrix_ptr,
+        nullptr,
         arg_ptr[group_id].p_b1_grid_ + b1_batch_offset,
         arg_ptr[group_id].p_c_grid_ + c_batch_offset,
         arg_ptr[group_id].p_lse_grid_ + lse_batch_offset,

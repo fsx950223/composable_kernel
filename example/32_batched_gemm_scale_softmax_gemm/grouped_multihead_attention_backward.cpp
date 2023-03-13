@@ -570,16 +570,16 @@ int run(int argc, char* argv[])
     std::vector<DeviceMemPtr> ygrad_tensors_device;
     std::vector<DeviceMemPtr> kgrad_tensors_device;
     std::vector<DeviceMemPtr> vgrad_tensors_device;
-    std::size_t group_count = 10;
+    std::size_t group_count = 16;
     std::size_t flop = 0, num_byte = 0;
     for(std::size_t i = 0; i < group_count; i++)
     {
-        int M  = 128 * (rand() % 8) + (rand() % 128);
-        int N  = 128 * (rand() % 8) + (rand() % 128);
+        int M  = 2048;
+        int N  = 2048;
         int K  = DIM;
         int O  = DIM;
-        int G0 = rand() % 4 + 1;
-        int G1 = rand() % 4 + 1;
+        int G0 = 1;
+        int G1 = 12;
         std::vector<ck::index_t> q_gs_ms_ks_lengths{G0, G1, M, K};
         std::vector<ck::index_t> q_gs_ms_ks_strides =
             input_permute
